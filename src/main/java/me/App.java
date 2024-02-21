@@ -27,6 +27,9 @@ public class App {
 
 
 
+        controller.setActiveTicketStations();
+        System.out.println(controller.readAllTicketStation());
+
 
 
 
