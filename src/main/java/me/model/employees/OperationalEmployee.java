@@ -23,27 +23,10 @@ public class OperationalEmployee extends Employee {
         this.currentAttraction = currentAttraction;
     }
 
-
-    public int allowAccess(Client client) {
-
-        if (client.getAge() >= currentAttraction.getAgeClassification()
-           && client.getHeightOnCm() >= currentAttraction.getMinimumHeight()
-           && currentAttraction.getValidPassports().contains(client.getPassportType())
-           && currentAttraction.isAvailable())
-        {
-            currentAttraction.setVisitCount(currentAttraction.getVisitCount()+1);
-            return 1;
-        } else if(!(client.getAge() >= currentAttraction.getAgeClassification())){
-            return 2;
-        } else if(!(client.getHeightOnCm() >= currentAttraction.getMinimumHeight())){
-            return 3;
-        } else if(!(currentAttraction.getValidPassports().contains(client.getPassportType()))){
-            return 4;
-        } else if(!(getCurrentAttraction().isAvailable())){
-            return 5;
-        } else{
-            return 6;
-        }
-
+    @Override
+    public String toString() {
+        return "OperationalEmployee{" +
+                "currentAttraction=" + currentAttraction +
+                '}';
     }
 }

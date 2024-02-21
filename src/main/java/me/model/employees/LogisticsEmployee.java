@@ -23,16 +23,10 @@ public class LogisticsEmployee extends Employee {
         CurrentTicketStation = currentTicketStation;
     }
 
-//    public Client createClient(String name, String email, int id, int phoneNumber, int heightOnCm, int age, int visitCount, int discountPercentage) {
-//        return new Client(name, email, id, phoneNumber, heightOnCm, age, visitCount, discountPercentage);
-//    }
-//
-//    public UnderAgeClient createUnderAgeClient(String name, String email, int id, int phoneNumber, int heightOnCm, int age, int visitCount, int discountPercentage, String attendantName, int attendantId, int attendantPhoneNumber) {
-//        return new UnderAgeClient(name, email, id, phoneNumber, heightOnCm, age, visitCount, discountPercentage, attendantName, attendantId, attendantPhoneNumber);
-//    }
-
-    public void sellPassport(Client client, int passportType) {
-        client.setPassportType(passportType);
-        client.setVisitCount(client.getVisitCount() + 1);
+    @Override
+    public String toString() {
+        return "LogisticsEmployee{" +
+                "CurrentTicketStation=" + CurrentTicketStation +
+                '}';
     }
 }

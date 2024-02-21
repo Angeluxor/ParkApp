@@ -60,4 +60,15 @@ public class Client extends Person {
     public void setDiscountPercentage(int discountPercentage) {
         this.discountPercentage = discountPercentage;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "heightOnCm=" + heightOnCm +
+                ", age=" + age +
+                ", visitCount=" + visitCount +
+                ", passportType=" + passportType +
+                ", discountPercentage=" + discountPercentage +
+                '}';
+    }
 }

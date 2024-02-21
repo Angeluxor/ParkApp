@@ -15,4 +15,37 @@ public class UnderAgeClient extends Client {
         this.attendantId = attendantId;
         this.attendantPhoneNumber = attendantPhoneNumber;
     }
+
+    public String getAttendantName() {
+        return attendantName;
+    }
+
+    public void setAttendantName(String attendantName) {
+        this.attendantName = attendantName;
+    }
+
+    public int getAttendantId() {
+        return attendantId;
+    }
+
+    public void setAttendantId(int attendantId) {
+        this.attendantId = attendantId;
+    }
+
+    public int getAttendantPhoneNumber() {
+        return attendantPhoneNumber;
+    }
+
+    public void setAttendantPhoneNumber(int attendantPhoneNumber) {
+        this.attendantPhoneNumber = attendantPhoneNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "UnderAgeClient{" +
+                "attendantName='" + attendantName + '\'' +
+                ", attendantId=" + attendantId +
+                ", attendantPhoneNumber=" + attendantPhoneNumber +
+                '}';
+    }
 }

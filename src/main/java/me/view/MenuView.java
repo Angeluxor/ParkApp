@@ -29,7 +29,7 @@ public class MenuView {
             case OperationalEmployee operationalEmployee:
                 operationalMenu();
                 break;
-            case AdversitingEmployee adversitingEmployee:
+            case AdvertisingEmployee advertisingEmployee:
                 advertisingMenu();
                 break;
             default:

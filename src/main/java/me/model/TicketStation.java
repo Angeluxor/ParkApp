@@ -28,4 +28,12 @@ public class TicketStation {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    @Override
+    public String toString() {
+        return "TicketStation{" +
+                "stationNumber=" + stationNumber +
+                ", active=" + active +
+                '}';
+    }
 }

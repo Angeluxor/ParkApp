@@ -19,4 +19,11 @@ public class Employee extends Person {
     public void setWorkScheduleType(int workScheduleType) {
         this.workScheduleType = workScheduleType;
     }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "workScheduleType=" + workScheduleType +
+                '}';
+    }
 }

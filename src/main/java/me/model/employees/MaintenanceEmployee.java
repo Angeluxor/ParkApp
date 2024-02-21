@@ -11,7 +11,5 @@ public class MaintenanceEmployee extends Employee{
         super(name, email, id, phoneNumber, workScheduleType);
     }
 
-    public void setAttractionAvailability(Attraction attraction){
-        attraction.setAvailable(!attraction.isAvailable());
-    }
+
 }

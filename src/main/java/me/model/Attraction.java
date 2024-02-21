@@ -68,4 +68,16 @@ public class Attraction {
     public void setAvailable(boolean available) {
         this.available = available;
     }
+
+    @Override
+    public String toString() {
+        return "Attraction{" +
+                "name='" + name + '\'' +
+                ", ageClassification=" + ageClassification +
+                ", minimumHeight=" + minimumHeight +
+                ", validPassports=" + validPassports +
+                ", visitCount=" + visitCount +
+                ", available=" + available +
+                '}';
+    }
 }
