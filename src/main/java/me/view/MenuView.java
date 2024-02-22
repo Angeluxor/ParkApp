@@ -146,7 +146,19 @@ public class MenuView {
                         System.out.println("Por favor ingrese el número de documento del cliente que desea acceder a la atracción");
                         auxId = scann.nextInt();
                         scann.next();
-                        controller.allowAccess(employee.getId(), auxId);
+                        int result = controller.allowAccess(employee.getId(), auxId);
+                        switch(result){
+                            case 1:
+                                System.out.println("Acceso permitido");
+                            case 2:
+                                System.out.println("Acceso denegado por incumplimiento de la clasificación de edad");
+                            case 3:
+                                System.out.println("Acceso denegado por incumplimiento del mínimo de altura");
+                            case 4:
+                                System.out.println("Acceso denegado por pasaporte inválido para la atracción");
+                            case 5:
+                                System.out.println("Acceso denegado por atracción inhabilitada");
+                        }
                         break;
                     case 2:
                         invalidOption = false;
@@ -192,7 +204,7 @@ public class MenuView {
                             do {
                                 client = switch (aux) {
                                     case 0 -> controller.readClientById(clientId);
-                                    case 1 -> controller.readUnderAgeClientsById(clientId);
+                                    //case 1 -> controller.readUnderAgeClientsById(clientId);
                                     default -> new Person();
                                 };
                                 aux++;
@@ -222,32 +234,29 @@ public class MenuView {
                                     String attendantNameAux;
                                     int attendantIdAux;
                                     long attendantPhoneNumberAux;
-                                    int passportAcquiredAux;
+                                    String passportAcquiredAux;
                                     System.out.println("Cliente no encontrado");
 
                                     System.out.println("Es necesario llevar a cabo el registro del nuevo cliente");
                                     System.out.println("Por favor ingrese el nombre del cliente");
+                                    scann.next();
                                     nameAux = scann.nextLine();
                                     System.out.println("Por favor ingrese el correo electrónico del cliente");
                                     emailAux = scann.nextLine();
                                     System.out.println("Por favor ingrese el número de documento del cliente");
                                     idAux = scann.nextInt();
-                                    scann.next();
                                     System.out.println("Por favor ingrese el número de teléfono del cliente");
                                     phoneNumberAux = scann.nextLong();
-                                    scann.next();
                                     System.out.println("Por favor ingrese la altura del cliente en centímetros");
                                     heightOnCmAux = scann.nextInt();
-                                    scann.next();
                                     System.out.println("Digite el tipo de pasaporte que desea adquirir el cliente [1, 2 o 3]");
-                                    passportAcquired = scann.nextLine();
-                                    scann.next();
+                                    passportAcquiredAux = scann.next();
                                     System.out.println("Por favor ingrese la edad del cliente");
                                     ageAux = scann.nextInt();
-                                    scann.next();
+
                                     if (ageAux > 17) {
                                         controller.createClient(nameAux, emailAux, idAux, phoneNumberAux, heightOnCmAux, ageAux, 0, 0);
-                                        controller.updateClientById(idAux, "passportType", passportAcquired);
+                                        controller.updateClientById(idAux, "passportType", passportAcquiredAux);
                                     } else {
                                         System.out.println("Cliente menor de edad");
                                         System.out.println("Por favor ingrese el nombre del acudiente");
@@ -259,7 +268,7 @@ public class MenuView {
                                         attendantPhoneNumberAux = scann.nextLong();
                                         scann.next();
                                         controller.createUnderAgeClient(nameAux, emailAux, idAux, phoneNumberAux, heightOnCmAux, ageAux, 0, 0, attendantNameAux, attendantIdAux, attendantPhoneNumberAux);
-                                        controller.updateUnderAgeClientsById(idAux, "passportType", passportAcquired);
+                                        controller.updateUnderAgeClientsById(idAux, "passportType", passportAcquiredAux);
                                     }
                                     controller.registerVisitor();
                             }
@@ -267,6 +276,7 @@ public class MenuView {
                             System.out.println("Por favor ingrese un número entero\n");
                             scann.next();
                         }
+                        break;
                     case 2:
                         invalidOption = false;
                         break;

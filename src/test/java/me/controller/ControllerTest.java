@@ -54,4 +54,5 @@ class ControllerTest {
         int result = controller.allowAccess(1001241112, 3698);
         assertEquals(1, result);
     }
+
 }

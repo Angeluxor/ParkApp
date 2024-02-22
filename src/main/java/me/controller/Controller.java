@@ -32,27 +32,11 @@ public class Controller {
     private final CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
     private final String connectionString = "mongodb+srv://idmiguelangel123:1234@parkdb.0sawctg.mongodb.net/?retryWrites=true&w=majority";
 
-    public Controller(Park park) {
-
-        this.park = park;
-    }
 
     public Controller() {
+        park = new Park(70, 0);
     }
 
-
-    public Park getPark() {
-        return park;
-    }
-
-//    public Employee ReadEmployee(int employeeId) {
-//        for (Employee employee : park.getEmployeesList()) {
-//            if (employee.getId() == employeeId) {
-//                return employee;
-//            }
-//        }
-//        return null;
-//    }
 
     /**
      * CRUD methods for ticketStation
