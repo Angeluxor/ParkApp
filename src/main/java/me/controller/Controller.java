@@ -22,44 +22,38 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
-import static com.mongodb.client.model.Filters.all;
-import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class Controller {
 
-    private MenuView menu;
     private Park park;
     private final CodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
     private final CodecRegistry pojoCodecRegistry = fromRegistries(getDefaultCodecRegistry(), fromProviders(pojoCodecProvider));
     private final String connectionString = "mongodb+srv://idmiguelangel123:1234@parkdb.0sawctg.mongodb.net/?retryWrites=true&w=majority";
 
-    public Controller(MenuView menu, Park park) {
-        this.menu = menu;
+    public Controller(Park park) {
+
         this.park = park;
     }
 
     public Controller() {
-
     }
 
-    public MenuView getMenu() {
-        return menu;
-    }
 
     public Park getPark() {
         return park;
     }
 
-    public Employee ReadEmployee(int employeeId) {
-        for (Employee employee : park.getEmployeesList()) {
-            if (employee.getId() == employeeId) {
-                return employee;
-            }
-        }
-        return null;
-    }
+//    public Employee ReadEmployee(int employeeId) {
+//        for (Employee employee : park.getEmployeesList()) {
+//            if (employee.getId() == employeeId) {
+//                return employee;
+//            }
+//        }
+//        return null;
+//    }
 
     /**
      * CRUD methods for ticketStation
@@ -84,9 +78,6 @@ public class Controller {
             ArrayList<TicketStation> ticketStations = new ArrayList<>();
             collection.find().into(ticketStations);
             return ticketStations;
-//            for (TicketStation ticketStation : ticketStations) {
-//                System.out.println(ticketStation + "\n");
-//            }
         }
 
     }
@@ -108,11 +99,9 @@ public class Controller {
             switch (property) {
                 case "stationNumber":
                     collection.updateOne(Filters.eq("stationNumber", number), Updates.set(property, Integer.parseInt(newValue)));
-                    ;
                     break;
                 case "active":
                     collection.updateOne(Filters.eq("stationNumber", number), Updates.set(property, Boolean.getBoolean(newValue)));
-                    ;
                     break;
             }
             return true;
@@ -169,7 +158,17 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<Attraction> collection = database.getCollection("Attractions", Attraction.class);
-            collection.updateOne(Filters.eq("name", name), Updates.set(property, newValue));
+            if(property.equalsIgnoreCase("name")){
+                collection.updateOne(Filters.eq("name", name), Updates.set(property, newValue));
+            } else if(property.equalsIgnoreCase("available")){
+                collection.updateOne(Filters.eq("name", name), Updates.set(property, Boolean.getBoolean(newValue)));
+            } else if(property.equalsIgnoreCase("validPassports")) {
+                collection.updateOne(Filters.eq("name", name), Updates.addToSet(property, Integer.parseInt(newValue)));
+            } else if(property.equalsIgnoreCase("visitCount")){
+                collection.updateOne(Filters.eq("name", name), Updates.inc(property, 1));
+            } else {
+                collection.updateOne(Filters.eq("name", name), Updates.set(property, Integer.parseInt(newValue)));
+            }
             return true;
         }
     }
@@ -186,7 +185,7 @@ public class Controller {
     /**
      * CRUD methods for Client
      */
-    public boolean createClient(String name, String email, int id, int phoneNumber, int heightOnCm, int age, int visitCount, int discountPercentage) {
+    public boolean createClient(String name, String email, int id, long phoneNumber, int heightOnCm, int age, int visitCount, int discountPercentage) {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<Client> collection = database.getCollection("Clients", Client.class);
@@ -213,7 +212,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<Client> collection = database.getCollection("Clients", Client.class);
-            return collection.find(eq("id", id)).first();
+            return collection.find(eq("_id", id)).first();
         }
 
     }
@@ -222,7 +221,11 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<Client> collection = database.getCollection("Clients", Client.class);
-            collection.updateOne(Filters.eq("id", id), Updates.set(property, newValue));
+            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
+            } else {
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
+            }
             return true;
         }
     }
@@ -231,7 +234,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<Client> collection = database.getCollection("Clients", Client.class);
-            collection.deleteOne(Filters.eq("id", id));
+            collection.deleteOne(Filters.eq("_id", id));
             return true;
         }
     }
@@ -239,7 +242,7 @@ public class Controller {
     /**
      * CRUD methods for UnderAgeClient
      */
-    public boolean createUnderAgeClient(String name, String email, int id, int phoneNumber, int heightOnCm, int age, int visitCount, int discountPercentage, String attendantName, int attendantId, int attendantPhoneNumber) {
+    public boolean createUnderAgeClient(String name, String email, int id, long phoneNumber, int heightOnCm, int age, int visitCount, int discountPercentage, String attendantName, int attendantId, long attendantPhoneNumber) {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<UnderAgeClient> collection = database.getCollection("UnderAgeClients", UnderAgeClient.class);
@@ -266,7 +269,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<UnderAgeClient> collection = database.getCollection("UnderAgeClients", UnderAgeClient.class);
-            return collection.find(eq("id", id)).first();
+            return collection.find(eq("_id", id)).first();
         }
 
     }
@@ -275,7 +278,11 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<UnderAgeClient> collection = database.getCollection("UnderAgeClients", UnderAgeClient.class);
-            collection.updateOne(Filters.eq("id", id), Updates.set(property, newValue));
+            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email") || property.equalsIgnoreCase("attendantName")){
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
+            } else {
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
+            }
             return true;
         }
     }
@@ -284,7 +291,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<UnderAgeClient> collection = database.getCollection("UnderAgeClients", UnderAgeClient.class);
-            collection.deleteOne(Filters.eq("id", id));
+            collection.deleteOne(Filters.eq("_id", id));
             return true;
         }
     }
@@ -292,7 +299,7 @@ public class Controller {
     /**
      * CRUD methods for administrativeEmployee
      */
-    public boolean createAdministrativeEmployee(String name, String email, int id, int phoneNumber, int workScheduleType) {
+    public boolean createAdministrativeEmployee(String name, String email, int id, long phoneNumber, int workScheduleType) {
 
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
@@ -319,7 +326,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<AdministrativeEmployee> collection = database.getCollection("AdministrativeEmployees", AdministrativeEmployee.class);
-            return collection.find(eq("id", id)).first();
+            return collection.find(eq("_id", id)).first();
         }
 
     }
@@ -328,7 +335,12 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<AdministrativeEmployee> collection = database.getCollection("AdministrativeEmployees", AdministrativeEmployee.class);
-            collection.updateOne(Filters.eq("id", id), Updates.set(property, newValue));
+            collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
+            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
+            } else {
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
+            }
             return true;
         }
     }
@@ -337,7 +349,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<AdministrativeEmployee> collection = database.getCollection("AdministrativeEmployees", AdministrativeEmployee.class);
-            collection.deleteOne(Filters.eq("id", id));
+            collection.deleteOne(Filters.eq("_id", id));
             return true;
         }
     }
@@ -345,7 +357,7 @@ public class Controller {
     /**
      * CRUD methods for AdvertisingEmployee
      */
-    public boolean createAdvertisingEmployee(String name, String email, int id, int phoneNumber, int workScheduleType) {
+    public boolean createAdvertisingEmployee(String name, String email, int id, long phoneNumber, int workScheduleType) {
 
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
@@ -372,7 +384,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<AdvertisingEmployee> collection = database.getCollection("AdvertisingEmployees", AdvertisingEmployee.class);
-            return collection.find(eq("id", id)).first();
+            return collection.find(eq("_id", id)).first();
         }
 
     }
@@ -381,7 +393,11 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<AdvertisingEmployee> collection = database.getCollection("AdvertisingEmployees", AdvertisingEmployee.class);
-            collection.updateOne(Filters.eq("id", id), Updates.set(property, newValue));
+            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
+            } else {
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
+            }
             return true;
         }
     }
@@ -390,7 +406,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<AdvertisingEmployee> collection = database.getCollection("AdvertisingEmployees", AdvertisingEmployee.class);
-            collection.deleteOne(Filters.eq("id", id));
+            collection.deleteOne(Filters.eq("_id", id));
             return true;
         }
     }
@@ -398,7 +414,7 @@ public class Controller {
     /**
      * CRUD methods for LogisticsEmployee
      */
-    public boolean createLogisticsEmployee(String name, String email, int id, int phoneNumber, int workScheduleType, TicketStation currentTicketStation) {
+    public boolean createLogisticsEmployee(String name, String email, int id, long phoneNumber, int workScheduleType, TicketStation currentTicketStation) {
 
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
@@ -424,7 +440,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<LogisticsEmployee> collection = database.getCollection("LogisticsEmployees", LogisticsEmployee.class);
-            return collection.find(eq("id", id)).first();
+            return collection.find(eq("_id", id)).first();
         }
 
     }
@@ -433,7 +449,14 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<LogisticsEmployee> collection = database.getCollection("LogisticsEmployees", LogisticsEmployee.class);
-            collection.updateOne(Filters.eq("id", id), Updates.set(property, newValue));
+            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
+            } else if(property.equalsIgnoreCase("currentTicketStation")){
+                TicketStation newTicketStation = readTicketStationByNumber(Integer.parseInt(newValue));
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, newTicketStation));
+            } else {
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
+            }
             return true;
         }
     }
@@ -442,7 +465,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<LogisticsEmployee> collection = database.getCollection("LogisticsEmployees", LogisticsEmployee.class);
-            collection.deleteOne(Filters.eq("id", id));
+            collection.deleteOne(Filters.eq("_id", id));
             return true;
         }
     }
@@ -450,7 +473,7 @@ public class Controller {
     /**
      * CRUD methods for MaintenanceEmployee
      */
-    public boolean createMaintenanceEmployee(String name, String email, int id, int phoneNumber, int workScheduleType) {
+    public boolean createMaintenanceEmployee(String name, String email, int id, long phoneNumber, int workScheduleType) {
 
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
@@ -476,7 +499,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<MaintenanceEmployee> collection = database.getCollection("MaintenanceEmployees", MaintenanceEmployee.class);
-            return collection.find(eq("id", id)).first();
+            return collection.find(eq("_id", id)).first();
         }
 
     }
@@ -485,7 +508,11 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<MaintenanceEmployee> collection = database.getCollection("MaintenanceEmployees", MaintenanceEmployee.class);
-            collection.updateOne(Filters.eq("id", id), Updates.set(property, newValue));
+            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
+            } else {
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
+            }
             return true;
         }
     }
@@ -494,7 +521,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<MaintenanceEmployee> collection = database.getCollection("MaintenanceEmployees", MaintenanceEmployee.class);
-            collection.deleteOne(Filters.eq("id", id));
+            collection.deleteOne(Filters.eq("_id", id));
             return true;
         }
     }
@@ -502,7 +529,7 @@ public class Controller {
     /**
      * CRUD methods for OperationalEmployee
      */
-    public boolean createOperationalEmployee(String name, String email, int id, int phoneNumber, int workScheduleType, Attraction attraction) {
+    public boolean createOperationalEmployee(String name, String email, int id, long phoneNumber, int workScheduleType, Attraction attraction) {
 
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
@@ -528,7 +555,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<OperationalEmployee> collection = database.getCollection("OperationalEmployees", OperationalEmployee.class);
-            return collection.find(eq("id", id)).first();
+            return collection.find(eq("_id", id)).first();
         }
 
     }
@@ -537,7 +564,14 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<OperationalEmployee> collection = database.getCollection("OperationalEmployees", OperationalEmployee.class);
-            collection.updateOne(Filters.eq("id", id), Updates.set(property, newValue));
+            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
+            } else if(property.equalsIgnoreCase("currentTicketStation")){
+                Attraction attraction = readAttractionByName(newValue);
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, attraction));
+            } else {
+                collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
+            }
             return true;
         }
     }
@@ -546,7 +580,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<OperationalEmployee> collection = database.getCollection("OperationalEmployees", OperationalEmployee.class);
-            collection.deleteOne(Filters.eq("id", id));
+            collection.deleteOne(Filters.eq("_id", id));
             return true;
         }
     }
@@ -558,7 +592,7 @@ public class Controller {
     public void setActiveTicketStations() {
         ArrayList<TicketStation> ticketStations = readAllTicketStation();
 
-        if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.MONDAY) || LocalDate.now().getDayOfWeek().equals(DayOfWeek.WEDNESDAY) || park.getOccupancy()<=60) {
+        if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.MONDAY) || LocalDate.now().getDayOfWeek().equals(DayOfWeek.WEDNESDAY) || park.calculateOccupancy()<=60) {
             for (int i = 0; i < 2; i++) {
                 int randomAux = (int) (Math.random() * 5);
                 TicketStation randomTicketStation = readTicketStationByNumber(randomAux);
@@ -591,19 +625,15 @@ public class Controller {
      * Capabilities methods for logisticsEmployee
      */
 
-    public void sellPassport(int age, int id, int passportType) {
-        if(age>=18){
-            updateClientById(id, "passportType", passportType);
-        } else {
-            updateUnderAgeClientsById(id, "passportType", passportType);
-        }
+    public void registerVisitor() {
+        park.setVisitors(park.getVisitors()+1);
     }
 
     /**
      * Capabilities methods for maintenanceEmployee
      */
 
-    public void setAttractionAvailability(String name, boolean available) {
+    public void setAttractionAvailability(String name, String available) {
         updateAttractionByName(name, "available",available);
     }
 
@@ -619,7 +649,7 @@ public class Controller {
                 && client.getHeightOnCm() >= currentAttraction.getMinimumHeight()
                 && currentAttraction.getValidPassports().contains(client.getPassportType())
                 && currentAttraction.isAvailable()) {
-            updateAttractionByName(currentAttraction.getName(), "visitCount", currentAttraction.getVisitCount()+1);
+            updateAttractionByName(currentAttraction.getName(), "visitCount", "");
             return 1;
         } else if (!(client.getAge() >= currentAttraction.getAgeClassification())) {
             return 2;

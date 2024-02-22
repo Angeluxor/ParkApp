@@ -1,8 +1,6 @@
 package me.model.employees;
 
 import me.model.TicketStation;
-import me.model.clients.Client;
-import me.model.clients.UnderAgeClient;
 
 public class LogisticsEmployee extends Employee {
     private TicketStation CurrentTicketStation;
@@ -10,7 +8,7 @@ public class LogisticsEmployee extends Employee {
     public LogisticsEmployee() {
     }
 
-    public LogisticsEmployee(String name, String email, int id, int phoneNumber, int workScheduleType, TicketStation currentTicketStation) {
+    public LogisticsEmployee(String name, String email, int id, long phoneNumber, int workScheduleType, TicketStation currentTicketStation) {
         super(name, email, id, phoneNumber, workScheduleType);
         CurrentTicketStation = currentTicketStation;
     }

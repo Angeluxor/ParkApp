@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class AdministrativeEmployee extends Employee{
 
-    public AdministrativeEmployee(String name, String email, int id, int phoneNumber, int workScheduleType) {
+    public AdministrativeEmployee(String name, String email, int id, long phoneNumber, int workScheduleType) {
         super(name, email, id, phoneNumber, workScheduleType);
     }
 

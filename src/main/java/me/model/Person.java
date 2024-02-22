@@ -4,11 +4,11 @@ public class Person {
     private String name;
     private String email;
     private int id;
-    private int phoneNumber;
+    private long phoneNumber;
 
     public Person() {
     }
-    public Person(String name, String email, int id, int phoneNumber) {
+    public Person(String name, String email, int id, long phoneNumber) {
         this.name = name;
         this.email = email;
         this.id = id;
@@ -40,11 +40,11 @@ public class Person {
         this.id = id;
     }
 
-    public int getPhoneNumber() {
+    public long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

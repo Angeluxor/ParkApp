@@ -4,12 +4,19 @@ public class UnderAgeClient extends Client {
 
     private String attendantName;
     private int attendantId;
-    private int attendantPhoneNumber;
+    private long attendantPhoneNumber;
 
     public UnderAgeClient() {
     }
 
-    public UnderAgeClient(String name, String email, int id, int phoneNumber, int heightOnCm, int age, int visitCount, int discountPercentage, String attendantName, int attendantId, int attendantPhoneNumber) {
+    public UnderAgeClient(String name, String email, int id, long phoneNumber, int heightOnCm, int age, int visitCount, int passportType, int discountPercentage, String attendantName, int attendantId, long attendantPhoneNumber) {
+        super(name, email, id, phoneNumber, heightOnCm, age, visitCount, passportType, discountPercentage);
+        this.attendantName = attendantName;
+        this.attendantId = attendantId;
+        this.attendantPhoneNumber = attendantPhoneNumber;
+    }
+
+    public UnderAgeClient(String name, String email, int id, long phoneNumber, int heightOnCm, int age, int visitCount, int discountPercentage, String attendantName, int attendantId, long attendantPhoneNumber) {
         super(name, email, id, phoneNumber, heightOnCm, age, visitCount, discountPercentage);
         this.attendantName = attendantName;
         this.attendantId = attendantId;
@@ -32,7 +39,7 @@ public class UnderAgeClient extends Client {
         this.attendantId = attendantId;
     }
 
-    public int getAttendantPhoneNumber() {
+    public long getAttendantPhoneNumber() {
         return attendantPhoneNumber;
     }
 

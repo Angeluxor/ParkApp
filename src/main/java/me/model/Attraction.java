@@ -69,15 +69,15 @@ public class Attraction {
         this.available = available;
     }
 
+
+
     @Override
     public String toString() {
-        return "Attraction{" +
-                "name='" + name + '\'' +
-                ", ageClassification=" + ageClassification +
-                ", minimumHeight=" + minimumHeight +
-                ", validPassports=" + validPassports +
-                ", visitCount=" + visitCount +
-                ", available=" + available +
-                '}';
+        return  "Nombre: " + name +
+                "\nEdad mínima: " + ageClassification +
+                "\nEstatura mínima: " + minimumHeight +
+                "\nPasaportes válidos: " + validPassports +
+                "\nNúmero de visitas: " + visitCount +
+                "\nDisponible: " + available;
     }
 }

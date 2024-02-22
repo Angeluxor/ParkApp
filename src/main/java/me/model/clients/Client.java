@@ -13,7 +13,16 @@ public class Client extends Person {
     public Client() {
     }
 
-    public Client(String name, String email, int id, int phoneNumber, int heightOnCm, int age, int visitCount, int discountPercentage) {
+    public Client(String name, String email, int id, long phoneNumber, int heightOnCm, int age, int visitCount, int passportType, int discountPercentage) {
+        super(name, email, id, phoneNumber);
+        this.heightOnCm = heightOnCm;
+        this.age = age;
+        this.visitCount = visitCount;
+        this.passportType = passportType;
+        this.discountPercentage = discountPercentage;
+    }
+
+    public Client(String name, String email, int id, long phoneNumber, int heightOnCm, int age, int visitCount, int discountPercentage) {
         super(name, email, id, phoneNumber);
         this.heightOnCm = heightOnCm;
         this.age = age;
