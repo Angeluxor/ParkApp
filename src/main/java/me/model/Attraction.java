@@ -9,6 +9,7 @@ public class Attraction {
     private ArrayList<Integer> validPassports;
     private int visitCount;
     private boolean available;
+
     public Attraction() {
     }
 
@@ -70,10 +71,9 @@ public class Attraction {
     }
 
 
-
     @Override
     public String toString() {
-        return  "Nombre: " + name +
+        return "Nombre: " + name +
                 "\nEdad mínima: " + ageClassification +
                 "\nEstatura mínima: " + minimumHeight +
                 "\nPasaportes válidos: " + validPassports +

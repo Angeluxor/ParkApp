@@ -12,6 +12,7 @@ public class Employee extends Person {
 
     public Employee() {
     }
+
     public Employee(String name, String email, int id, long phoneNumber, int workScheduleType) {
         super(name, email, id, phoneNumber);
         this.workScheduleType = workScheduleType;

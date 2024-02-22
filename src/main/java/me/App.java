@@ -6,8 +6,8 @@ import me.view.MenuView;
 public class App {
     public static void main(String[] args) {
 
-        Controller controller = new Controller();
         MenuView menuView = new MenuView();
+        menuView.mainMenu();
 
         /* BD initial fill using CRUD methods
         controller.createAdministrativeEmployee("Pedro Perez", "pperez@salitre.com", 71256389, 3005117799L, 1);
@@ -24,7 +24,6 @@ public class App {
         controller.createOperationalEmployee("Soledad Bravo", "solebravo@salitre.com", 98587443, 3043155211L, 1, controller.readAttractionByName("Martillo"));
         controller.createOperationalEmployee("Vicente Miranda", "miranda68@salitre.com", 72200365, 3109916354L, 1, controller.readAttractionByName("Carros chocones"));
          */
-        menuView.mainMenu();
 
 
 

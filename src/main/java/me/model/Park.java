@@ -1,10 +1,5 @@
 package me.model;
 
-import me.model.clients.Client;
-import me.model.employees.Employee;
-
-import java.util.ArrayList;
-
 public class Park {
 
     private double maxCapacity;

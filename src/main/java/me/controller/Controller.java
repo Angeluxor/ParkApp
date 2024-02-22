@@ -12,7 +12,6 @@ import me.model.TicketStation;
 import me.model.clients.Client;
 import me.model.clients.UnderAgeClient;
 import me.model.employees.*;
-import me.view.MenuView;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -22,7 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
-import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Filters.eq;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -158,13 +157,13 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<Attraction> collection = database.getCollection("Attractions", Attraction.class);
-            if(property.equalsIgnoreCase("name")){
+            if (property.equalsIgnoreCase("name")) {
                 collection.updateOne(Filters.eq("name", name), Updates.set(property, newValue));
-            } else if(property.equalsIgnoreCase("available")){
+            } else if (property.equalsIgnoreCase("available")) {
                 collection.updateOne(Filters.eq("name", name), Updates.set(property, Boolean.getBoolean(newValue)));
-            } else if(property.equalsIgnoreCase("validPassports")) {
+            } else if (property.equalsIgnoreCase("validPassports")) {
                 collection.updateOne(Filters.eq("name", name), Updates.addToSet(property, Integer.parseInt(newValue)));
-            } else if(property.equalsIgnoreCase("visitCount")){
+            } else if (property.equalsIgnoreCase("visitCount")) {
                 collection.updateOne(Filters.eq("name", name), Updates.inc(property, 1));
             } else {
                 collection.updateOne(Filters.eq("name", name), Updates.set(property, Integer.parseInt(newValue)));
@@ -221,7 +220,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<Client> collection = database.getCollection("Clients", Client.class);
-            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+            if (property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")) {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
             } else {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
@@ -278,7 +277,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<UnderAgeClient> collection = database.getCollection("UnderAgeClients", UnderAgeClient.class);
-            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email") || property.equalsIgnoreCase("attendantName")){
+            if (property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email") || property.equalsIgnoreCase("attendantName")) {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
             } else {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
@@ -336,7 +335,7 @@ public class Controller {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<AdministrativeEmployee> collection = database.getCollection("AdministrativeEmployees", AdministrativeEmployee.class);
             collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
-            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+            if (property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")) {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
             } else {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
@@ -393,7 +392,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<AdvertisingEmployee> collection = database.getCollection("AdvertisingEmployees", AdvertisingEmployee.class);
-            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+            if (property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")) {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
             } else {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
@@ -449,9 +448,9 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<LogisticsEmployee> collection = database.getCollection("LogisticsEmployees", LogisticsEmployee.class);
-            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+            if (property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")) {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
-            } else if(property.equalsIgnoreCase("currentTicketStation")){
+            } else if (property.equalsIgnoreCase("currentTicketStation")) {
                 TicketStation newTicketStation = readTicketStationByNumber(Integer.parseInt(newValue));
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, newTicketStation));
             } else {
@@ -508,7 +507,7 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<MaintenanceEmployee> collection = database.getCollection("MaintenanceEmployees", MaintenanceEmployee.class);
-            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+            if (property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")) {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
             } else {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, Integer.parseInt(newValue)));
@@ -564,9 +563,9 @@ public class Controller {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             MongoDatabase database = mongoClient.getDatabase("Park").withCodecRegistry(pojoCodecRegistry);
             MongoCollection<OperationalEmployee> collection = database.getCollection("OperationalEmployees", OperationalEmployee.class);
-            if(property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")){
+            if (property.equalsIgnoreCase("name") || property.equalsIgnoreCase("email")) {
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, newValue));
-            } else if(property.equalsIgnoreCase("currentTicketStation")){
+            } else if (property.equalsIgnoreCase("currentTicketStation")) {
                 Attraction attraction = readAttractionByName(newValue);
                 collection.updateOne(Filters.eq("_id", id), Updates.set(property, attraction));
             } else {
@@ -592,7 +591,7 @@ public class Controller {
     public void setActiveTicketStations() {
         ArrayList<TicketStation> ticketStations = readAllTicketStation();
 
-        if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.MONDAY) || LocalDate.now().getDayOfWeek().equals(DayOfWeek.WEDNESDAY) || park.calculateOccupancy()<=60) {
+        if (LocalDate.now().getDayOfWeek().equals(DayOfWeek.MONDAY) || LocalDate.now().getDayOfWeek().equals(DayOfWeek.WEDNESDAY) || park.calculateOccupancy() <= 60) {
             for (int i = 0; i < 2; i++) {
                 int randomAux = (int) (Math.random() * 5);
                 TicketStation randomTicketStation = readTicketStationByNumber(randomAux);
@@ -626,7 +625,7 @@ public class Controller {
      */
 
     public void registerVisitor() {
-        park.setVisitors(park.getVisitors()+1);
+        park.setVisitors(park.getVisitors() + 1);
     }
 
     /**
@@ -634,7 +633,7 @@ public class Controller {
      */
 
     public void setAttractionAvailability(String name, String available) {
-        updateAttractionByName(name, "available",available);
+        updateAttractionByName(name, "available", available);
     }
 
     /**

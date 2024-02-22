@@ -1,6 +1,6 @@
 package me.model.employees;
 
-public class MaintenanceEmployee extends Employee{
+public class MaintenanceEmployee extends Employee {
 
     public MaintenanceEmployee() {
     }
